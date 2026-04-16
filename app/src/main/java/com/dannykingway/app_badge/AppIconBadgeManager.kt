@@ -21,13 +21,16 @@ class AppIconBadgeManager(
     private val notificationTextProvider: (Int) -> CharSequence
 ) {
 
-    private val notificationManager: NotificationManagerCompat = NotificationManagerCompat.from(context)
+    private val notificationManagerCompat: NotificationManagerCompat = NotificationManagerCompat.from(context)
+    private val notificationManager: NotificationManager by lazy {
+        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    }
 
     fun updateBadge(count: Int) {
         val safeCount = count.coerceAtLeast(0)
 
         if (safeCount == 0) {
-            notificationManager.cancel(NOTIFICATION_ID)
+            notificationManagerCompat.cancel(NOTIFICATION_ID)
             return
         }
 
@@ -45,7 +48,7 @@ class AppIconBadgeManager(
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .build()
 
-        notificationManager.notify(NOTIFICATION_ID, notification)
+        notificationManagerCompat.notify(NOTIFICATION_ID, notification)
     }
 
     private fun ensureBadgeChannel() {
@@ -53,8 +56,7 @@ class AppIconBadgeManager(
             return
         }
 
-        val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val existingChannel = manager.getNotificationChannel(CHANNEL_ID)
+        val existingChannel = notificationManager.getNotificationChannel(CHANNEL_ID)
         if (existingChannel != null) {
             return
         }
@@ -69,7 +71,7 @@ class AppIconBadgeManager(
             lockscreenVisibility = Notification.VISIBILITY_PRIVATE
         }
 
-        manager.createNotificationChannel(channel)
+        notificationManager.createNotificationChannel(channel)
     }
 
     companion object {
