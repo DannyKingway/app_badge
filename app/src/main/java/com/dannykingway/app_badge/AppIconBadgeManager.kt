@@ -1,12 +1,15 @@
 package com.dannykingway.app_badge
 
+import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 
 /**
  * Android app icon badge helper for Kotlin apps.
@@ -34,6 +37,10 @@ class AppIconBadgeManager(
             return
         }
 
+        if (!canPostNotifications()) {
+            return
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             ensureBadgeChannel()
         }
@@ -48,7 +55,11 @@ class AppIconBadgeManager(
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .build()
 
-        notificationManagerCompat.notify(NOTIFICATION_ID, notification)
+        try {
+            notificationManagerCompat.notify(NOTIFICATION_ID, notification)
+        } catch (_: SecurityException) {
+            return
+        }
     }
 
     private fun ensureBadgeChannel() {
@@ -72,6 +83,21 @@ class AppIconBadgeManager(
         }
 
         notificationManager.createNotificationChannel(channel)
+    }
+
+    private fun canPostNotifications(): Boolean {
+        if (!notificationManagerCompat.areNotificationsEnabled()) {
+            return false
+        }
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            return true
+        }
+
+        return ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     companion object {

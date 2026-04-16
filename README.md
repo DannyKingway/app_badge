@@ -27,3 +27,4 @@ badgeManager.updateBadge(0) // clear badge
 - Android 8.0+ launcher badges are controlled by notifications.
 - `updateBadge(count)` creates/updates one low-priority notification with `setNumber(count)`.
 - `count <= 0` clears the badge notification.
+- Android 13+ requires `POST_NOTIFICATIONS` runtime permission before badge updates can be posted.
