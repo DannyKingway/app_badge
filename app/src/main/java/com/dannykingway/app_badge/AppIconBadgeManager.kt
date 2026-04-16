@@ -33,7 +33,7 @@ class AppIconBadgeManager(
         val safeCount = count.coerceAtLeast(0)
 
         if (safeCount == 0) {
-            notificationManagerCompat.cancel(BADGE_NOTIFICATION_ID)
+            notificationManagerCompat.cancel(BADGE_NOTIFICATION_ID_VALUE)
             return
         }
 
@@ -56,7 +56,7 @@ class AppIconBadgeManager(
             .build()
 
         try {
-            notificationManagerCompat.notify(BADGE_NOTIFICATION_ID, notification)
+            notificationManagerCompat.notify(BADGE_NOTIFICATION_ID_VALUE, notification)
         } catch (_: SecurityException) {
             return
         }
@@ -104,6 +104,6 @@ class AppIconBadgeManager(
         private const val CHANNEL_ID = "app_badge_channel"
         private const val CHANNEL_NAME = "App badge"
         private const val CHANNEL_DESCRIPTION = "Badge count notification channel"
-        private const val BADGE_NOTIFICATION_ID = 9001
+        private const val BADGE_NOTIFICATION_ID_VALUE = 9001
     }
 }
