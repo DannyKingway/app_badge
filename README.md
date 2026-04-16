@@ -5,7 +5,14 @@ Android Kotlin app icon badge implementation sample.
 ## Usage
 
 ```kotlin
-val badgeManager = AppIconBadgeManager(this)
+val badgeManager = AppIconBadgeManager(
+    context = this,
+    smallIconResId = R.drawable.ic_notification,
+    notificationTitle = getString(R.string.badge_title),
+    notificationTextProvider = { count ->
+        getString(R.string.badge_text, count)
+    }
+)
 
 badgeManager.updateBadge(8) // show badge count 8
 badgeManager.updateBadge(0) // clear badge

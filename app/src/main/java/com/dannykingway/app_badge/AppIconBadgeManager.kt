@@ -14,7 +14,12 @@ import androidx.core.app.NotificationManagerCompat
  * For Android 8.0+ this is driven by notifications; setting the notification
  * number updates launcher badge count on supported launchers.
  */
-class AppIconBadgeManager(private val context: Context) {
+class AppIconBadgeManager(
+    private val context: Context,
+    private val smallIconResId: Int,
+    private val notificationTitle: CharSequence,
+    private val notificationTextProvider: (Int) -> CharSequence
+) {
 
     private val notificationManager: NotificationManagerCompat = NotificationManagerCompat.from(context)
 
@@ -31,9 +36,9 @@ class AppIconBadgeManager(private val context: Context) {
         }
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
-            .setContentTitle("Badge update")
-            .setContentText("You have $safeCount pending items")
+            .setSmallIcon(smallIconResId)
+            .setContentTitle(notificationTitle)
+            .setContentText(notificationTextProvider(safeCount))
             .setNumber(safeCount)
             .setAutoCancel(true)
             .setOnlyAlertOnce(true)
