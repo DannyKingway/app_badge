@@ -13,7 +13,7 @@ badgeManager.updateBadge(0) // clear badge
 
 ## File
 
-- `/home/runner/work/app_badge/app_badge/app/src/main/java/com/dannykingway/app_badge/AppIconBadgeManager.kt`
+- `app/src/main/java/com/dannykingway/app_badge/AppIconBadgeManager.kt`
 
 ## Notes
 
